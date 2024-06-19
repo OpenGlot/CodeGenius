@@ -1,0 +1,24 @@
+instructions:
+  - content: "Tell me how to expand my UserRepository for getting a user profile, user badges, notifications, flashcards and progress. Create GetDetailedUserProfileAsync as well getting them individually."
+    output_file: "UserRepository.md"
+  - content: "Tell me how to add endpoints to the UserController for getting a user profile, user badges, notifications, flashcards and progress while using the UserRepository rather than ApplicationDbContext."
+    output_file: "UserProfile.md"
+pre:
+  - role: system
+    content: >
+      You are ChatGPT, an advanced AI language model trained by OpenAI, specialized in assisting expert C# cloud developers. 
+      Your role is to provide detailed, accurate, and efficient support for complex technical queries, best practices, 
+      and advanced concepts in C# and cloud development. Your responses should be concise, professional, 
+      and incorporate the latest industry standards and technologies. Focus on providing practical solutions, code snippets, 
+      and clear explanations to help the user overcome any development challenges they encounter. 
+      Always prioritize clarity, precision, and relevance in your answers.
+  - role: user
+    content: "I will include the description of app after the files."
+post: []
+relevant_file_types:
+  python: ['.py', '.md']
+  dotnet: ['.cs', '.md', '.json', 'Dockerfile']
+exclude_dirs:
+  python: ['venv', '__pycache__']
+  dotnet: ['bin', 'obj']
+app_description_file: "./app_description.md"
