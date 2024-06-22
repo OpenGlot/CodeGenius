@@ -1,121 +1,155 @@
-# Language Learning Application
+Sure! Here is a `README.md` file for your tool:
 
-## Overview
+```markdown
+# ChatGPT Code Assistant
 
-The Language Learning Application is a comprehensive platform designed to facilitate language learning through interactive lessons, multimedia content, AI-powered chatbots, and user-generated content. The app supports various user roles, including Users, Reviewers, Creators, Admins, and SuperAdmins, providing a robust framework for both learners and content creators.
+This Python console application assists in code analysis and review by generating insights using OpenAI's GPT-4. It scans a specified directory, extracts and formats the contents of relevant files, and then uses the configuration defined in a YAML file to prompt ChatGPT. The results are saved in markdown files.
 
 ## Features
 
-### User Profiles
+- Generates a file tree of a specified directory.
+- Extracts and formats contents of relevant files based on project type.
+- Configurable via a YAML file for instructions, file types, and excluded directories.
+- Automates prompts to ChatGPT and saves responses in specified markdown files.
+- Supports project types such as Python and .NET.
 
-- **User Registration and Authentication**: Users can register and log in using their credentials.
-- **User Roles**: Users can have multiple roles such as User, Reviewer, Creator, Admin, and SuperAdmin.
-- **User Dashboard**: A comprehensive dashboard that displays learning progress, strengths, and areas for improvement.
+## Requirements
 
-### Learning Content
+- Python 3.6+
+- `openai` package
+- `markdown2` package
+- `python-dotenv` package
+- `pyyaml` package
 
-- **Languages**: Users can select and learn multiple languages.
-- **Courses**: Each language contains multiple courses tailored to different levels and topics.
-- **Modules**: Courses are divided into modules, each focusing on specific aspects of the language.
-- **Lessons**: Modules contain lessons that include various types of questions and multimedia content.
+## Setup
 
-### Question Types
+1. **Clone the repository:**
 
-The application supports several types of questions, including:
-- Listen to the Sentence
-- Translate the Sentence
-- Fill in the Blank
-- True or False
-- Multiple Choice
-- Reorder the Sentence (Unjumble)
+   ```bash
+   git clone https://github.com/yourusername/chatgpt-code-assistant.git
+   cd chatgpt-code-assistant
+   ```
 
-Questions can include audio and images to enhance the learning experience.
+2. **Create a `.env` file in the project directory with the following content:**
 
-### Multimedia Content
+   ```plaintext
+   OPENAI_API_KEY=your_openai_api_key
+   ROOT_DIR=path_to_your_root_directory (optional)
+   OUTPUT_DIR=path_to_your_output_directory (optional)
+   PROJECT_TYPE=your_project_type (python or dotnet)
+   CONFIG_FILE=path_to_your_config.yml (optional, default is config.yml)
+   APP_DESCRIPTION_FILE=path_to_your_app_description_file
+   ```
 
-- **Audio and Video Integration**: High-quality audio and video content are integrated to improve listening and comprehension skills.
-- **Images**: Visual aids are used to reinforce learning.
+   - `OPENAI_API_KEY`: Your OpenAI API key.
+   - `ROOT_DIR`: (Optional) Path to the directory you want to analyze.
+   - `OUTPUT_DIR`: (Optional) Path to the directory where you want to save the responses.
+   - `PROJECT_TYPE`: (Optional) Your project type (e.g., `python` or `dotnet`).
+   - `CONFIG_FILE`: (Optional) Path to your configuration YAML file (default is `config.yml`).
+   - `APP_DESCRIPTION_FILE`: Path to the file containing your application description.
 
-### AI Chatbots
+3. **Create a `config.yml` file in the project directory with the following content:**
 
-- **Conversational Practice**: AI-powered chatbots provide conversational practice and instant feedback.
-- **Multiple AI Options**: Integration with APIs such as OpenAI's ChatGPT and Llama.
+   ```yaml
+   instructions:
+     - content: "Please analyze the provided code and give a summary."
+       output_file: "summary.md"
+     - content: "Identify potential improvements in the code."
+       output_file: "improvements.md"
+     - content: "Highlight any security vulnerabilities."
+       output_file: "security_vulnerabilities.md"
+   pre:
+     - role: system
+       content: "You are a helpful assistant."
+     - role: user
+       content: "This is the initial context message."
+   post:
+     - role: user
+       content: "This is the final context message after the files."
+   relevant_file_types:
+     python: ['.py', '.md']
+     dotnet: ['.cs', '.md', '.json', 'Dockerfile']
+   exclude_dirs:
+     python: ['venv', '__pycache__']
+     dotnet: ['bin', 'obj']
+   app_description_file: "path_to_your_app_description_file"
+   ```
 
-### User Interaction
+4. **Install the required packages:**
 
-- **Content Rating**: Users can rate lessons and other content with thumbs up or thumbs down.
-- **Spaced Repetition System**: Vocabulary learning through flashcards using spaced repetition.
-- **Notifications**: Users receive notifications for progress updates, upcoming lessons, and goals.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Achievements and Rewards
+## Usage
 
-- **Achievement Badges**: Users earn badges for reaching milestones and achievements.
-- **Progress Tracking**: Detailed tracking of user progress across courses, modules, and lessons.
+1. **Run the script:**
 
-### User-Generated Content
+   ```bash
+   python main.py
+   ```
 
-- **Content Creation Tools**: Users can create and share lessons, exercises, and quizzes.
-- **Community Sharing**: Content can be shared with the community for collaborative learning.
+   - If `ROOT_DIR` and `OUTPUT_DIR` are not set in the `.env` file, you will be prompted to enter them.
 
-### Subscription Plans
+2. **The script will:**
 
-- **Free and Premium Plans**: Various subscription plans with different access levels and features, including additional AI tools and an ad-free experience.
+   - Create a file tree of the specified directory.
+   - Extract and format the contents of relevant files.
+   - Include application description and file contents.
+   - Prompt ChatGPT with the defined instructions and save the responses in specified markdown files in the output directory.
 
-### Interactive Storybooks
+## Docker Usage
 
-- **Engaging Storybooks**: Interactive storybooks where learners make choices that affect the story's outcome, practicing the target language in context.
+1. **Build the Docker image:**
 
-## Technical Details
+   ```bash
+   docker build -t chatgpt-code-assistant .
+   ```
 
-### Technologies Used
+2. **Run the Docker container:**
 
-- **Backend**: C#, .NET 8, Entity Framework Core
-- **Frontend**: JavaScript, HTML, CSS
-- **Database**: PostgreSQL
-- **Authentication**: Amazon Cognito
-- **Cloud Services**: Azure for media services and scalability
+   ```bash
+   docker run -it --rm --name chatgpt-code-assistant-container chatgpt-code-assistant
+   ```
 
-### API Endpoints
+## Customization
 
-#### Users
+- **Relevant File Types and Exclude Directories:** Modify the `relevant_file_types` and `exclude_dirs` in `config.yml` to include the file extensions and directories you consider relevant for your project type.
+- **Instructions:** Update the `instructions` array in `config.yml` to add or modify the instructions and their corresponding output files.
 
-- `GET /api/Users` - Retrieve all users
-- `GET /api/Users/{id}` - Retrieve a user by ID
-- `POST /api/Users` - Add a new user
-- `PUT /api/Users/{id}` - Update a user
-- `DELETE /api/Users/{id}` - Delete a user
-- `GET /api/Users/{id}/Roles` - Retrieve roles for a user
-- `POST /api/Users/{id}/Roles` - Add a role to a user
-- `DELETE /api/Users/{id}/Roles/{roleId}` - Remove a role from a user
+## Example
 
-#### Languages
+```plaintext
+.env file:
 
-- `GET /api/Languages` - Retrieve all languages
-- `GET /api/Languages/{id}` - Retrieve a language by ID
-- `POST /api/Languages` - Add a new language
-- `PUT /api/Languages/{id}` - Update a language
-- `DELETE /api/Languages/{id}` - Delete a language
+OPENAI_API_KEY=your_openai_api_key
+PROJECT_TYPE=python
+APP_DESCRIPTION_FILE=path_to_your_app_description_file
 
-#### Courses
+Running the script:
 
-- `GET /api/Courses` - Retrieve all courses
-- `GET /api/Courses/{id}` - Retrieve a course by ID
-- `POST /api/Courses` - Add a new course
-- `PUT /api/Courses/{id}` - Update a course
-- `DELETE /api/Courses/{id}` - Delete a course
+Enter the directory to analyze: /path/to/your/project
+Enter the directory to save responses: /path/to/save/responses
 
-#### Modules
+Output:
 
-- `GET /api/Modules` - Retrieve all modules
-- `GET /api/Modules/{id}` - Retrieve a module by ID
-- `POST /api/Modules` - Add a new module
-- `PUT /api/Modules/{id}` - Update a module
-- `DELETE /api/Modules/{id}` - Delete a module
+Responses saved in /path/to/save/responses
+```
 
-#### Lessons
+## License
 
-- `GET /api/Lessons` - Retrieve all lessons
-- `GET /api/Lessons/{id}` - Retrieve a lesson by ID
-- `POST /api/Lessons` - Add a new lesson
-- `PUT /api/Lessons/{id}` - Update a lesson
-- `DELETE /api/Lessons/{id}` - Delete a lesson
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## Acknowledgements
+
+- [OpenAI](https://www.openai.com/) for the GPT-4 model.
+- [Python-Markdown2](https://github.com/trentm/python-markdown2) for the markdown conversion library.
+- [python-dotenv](https://github.com/theskumar/python-dotenv) for loading environment variables from a `.env` file.
+- [PyYAML](https://pyyaml.org/) for the YAML parser and emitter for Python.
+```
+
+Feel free to adjust any sections to better fit your specific project details or preferences.

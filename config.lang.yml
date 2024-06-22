@@ -1,0 +1,178 @@
+# Language-specific configurations
+
+languages:
+  python:
+    pre_messages:
+      - role: system
+        content: "You are an expert in Python programming."
+      - role: user
+        content: "Please provide insights for a Python project."
+    relevant_file_types:
+      - '.py'
+      - '.md'
+      - '.yaml'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'venv'
+      - '__pycache__'
+      - 'build'
+      - 'dist'
+
+  dotnet:
+    pre_messages:
+      - role: system
+        content: "You are an expert in .NET programming."
+      - role: user
+        content: "Please provide insights for a .NET project."
+    relevant_file_types:
+      - '.cs'
+      - '.md'
+      - '.json'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'bin'
+      - 'obj'
+      - '.vs'
+
+  java:
+    pre_messages:
+      - role: system
+        content: "You are an expert in Java programming."
+      - role: user
+        content: "Please provide insights for a Java project."
+    relevant_file_types:
+      - '.java'
+      - '.md'
+      - '.xml'
+      - '.properties'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'target'
+      - '.idea'
+      - '.classpath'
+      - '.project'
+
+  javascript:
+    pre_messages:
+      - role: system
+        content: "You are an expert in JavaScript programming."
+      - role: user
+        content: "Please provide insights for a JavaScript project."
+    relevant_file_types:
+      - '.js'
+      - '.jsx'
+      - '.md'
+      - '.json'
+      - '.html'
+      - '.css'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'node_modules'
+      - 'dist'
+      - '.cache'
+
+  typescript:
+    pre_messages:
+      - role: system
+        content: "You are an expert in TypeScript programming."
+      - role: user
+        content: "Please provide insights for a TypeScript project."
+    relevant_file_types:
+      - '.ts'
+      - '.tsx'
+      - '.md'
+      - '.json'
+      - '.html'
+      - '.css'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'node_modules'
+      - 'dist'
+      - '.cache'
+
+  ruby:
+    pre_messages:
+      - role: system
+        content: "You are an expert in Ruby programming."
+      - role: user
+        content: "Please provide insights for a Ruby project."
+    relevant_file_types:
+      - '.rb'
+      - '.md'
+      - '.yaml'
+      - '.yml'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'node_modules'
+      - 'vendor/bundle'
+      - '.cache'
+
+  php:
+    pre_messages:
+      - role: system
+        content: "You are an expert in PHP programming."
+      - role: user
+        content: "Please provide insights for a PHP project."
+    relevant_file_types:
+      - '.php'
+      - '.md'
+      - '.json'
+      - '.html'
+      - '.css'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'vendor'
+      - 'node_modules'
+      - '.cache'
+
+  go:
+    pre_messages:
+      - role: system
+        content: "You are an expert in Go programming."
+      - role: user
+        content: "Please provide insights for a Go project."
+    relevant_file_types:
+      - '.go'
+      - '.md'
+      - '.yaml'
+      - '.yml'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'vendor'
+      - 'bin'
+      - '.cache'
+
+  c_cpp:
+    pre_messages:
+      - role: system
+        content: "You are an expert in C/C++ programming."
+      - role: user
+        content: "Please provide insights for a C/C++ project."
+    relevant_file_types:
+      - '.c'
+      - '.cpp'
+      - '.h'
+      - '.hpp'
+      - '.md'
+      - '.json'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'bin'
+      - 'obj'
+      - '.cache'
+
+  rust:
+    pre_messages:
+      - role: system
+        content: "You are an expert in Rust programming."
+      - role: user
+        content: "Please provide insights for a Rust project."
+    relevant_file_types:
+      - '.rs'
+      - '.md'
+      - '.toml'
+      - 'Dockerfile'
+    exclude_dirs:
+      - 'target'
+      - 'bin'
+      - '.cache'

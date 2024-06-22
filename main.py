@@ -9,9 +9,6 @@ print("Packages are installed correctly.")
 # Load environment variables from .env file
 load_dotenv()
 
-# Define relevant file types and directories to include/exclude
-
-
 # OpenAI API key and other configurations from .env file
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 ROOT_DIR = os.getenv('ROOT_DIR')
@@ -25,13 +22,22 @@ def load_config(config_file):
         config = yaml.safe_load(file)
     return config
 
-# Load configuration
-config = load_config(CONFIG_FILE)
+# Load language-specific configuration based on project type
+def load_language_config(config_file, project_type):
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+    language_config = config.get('languages', {}).get(project_type, {})
+    return language_config
 
-# Set relevant file types and exclude directories based on project type
-RELEVANT_FILE_TYPES = config['relevant_file_types'].get(PROJECT_TYPE, [])
-EXCLUDE_DIRS = config['exclude_dirs'].get(PROJECT_TYPE, [])
-APP_DESCRIPTION_FILE = os.getenv('APP_DESCRIPTION_FILE', config['app_description_file'])
+# Load configurations
+config = load_config(CONFIG_FILE)
+#languages_config_file = config.get('languages_config_file')
+language_config = load_language_config('config.lang.yml', PROJECT_TYPE)
+
+# Set relevant file types, exclude directories, and other settings
+RELEVANT_FILE_TYPES = language_config.get('relevant_file_types', [])
+EXCLUDE_DIRS = language_config.get('exclude_dirs', [])
+APP_DESCRIPTION_FILE = os.getenv('APP_DESCRIPTION_FILE', config.get('app_description_file'))
 
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
@@ -66,10 +72,10 @@ def format_file_contents(file_tree):
     return formatted_contents
 
 # Function to prompt ChatGPT and save responses
-def prompt_chatgpt(file_tree, app_description, config):
+def prompt_chatgpt(file_tree, app_description, config, language_config):
     responses = {}
     instructions = config['instructions']
-    pre_messages = config['pre']
+    pre_messages = config['pre'] + language_config.get('pre_messages', [])
     post_messages = config['post']
     messages = []
     #add pre messages to messages
@@ -87,7 +93,7 @@ def prompt_chatgpt(file_tree, app_description, config):
         "role": "user",
         "content": f"App Description: {app_description}"
     })
-    
+
 
     for instruction in instructions:
         messages.append({
@@ -131,7 +137,7 @@ def main():
     file_tree = create_file_tree(ROOT_DIR)
 
     # Prompt ChatGPT and get responses
-    responses = prompt_chatgpt(file_tree, app_description, config)
+    responses = prompt_chatgpt(file_tree, app_description, config, language_config)
 
     # Save responses in markdown files
     save_responses(responses, OUTPUT_DIR)
