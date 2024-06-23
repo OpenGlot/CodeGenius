@@ -1,5 +1,19 @@
 instructions:
-  - content: "update the main.py to use config.lang.yml and update config.yml."
+  #- content: >
+  #    Based on init.sql, Create tests sql test data in the following order: Language (Chinese, Korean, English, Japanese, Russian, Spanish, French, German, Italian, Arabic), 
+  #    Courses, Modules, Lessons, and 
+  #    Then 10 each of Image, Audio
+  #    Then 10 Questions using images and audio.
+  #    Then add 4 Options for each question with their own image and audio.
+  #    Then UserProfiles, Badges, Flashcard, Progress.
+  #    For user profiles, use variables for guid and email.
+  #    Don't assume any ids, use a select statement to get the ids.
+  #  output_file: "init.md"
+  #- content: >
+  #    Write a sql file. Based on the provided SQL schema, write all SQL queries to delete all table rows in the correct order. User good comments.
+  #  output_file: "delete_all_rows.sql"
+  - content: >
+      Update the config instructions to include two optional fields: enabled and overwrite. if the file exists and overwrite=false, skip the instruction.
     output_file: "config.md"
 pre:
   - role: user

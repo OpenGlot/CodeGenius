@@ -1,3 +1,43 @@
+Certainly! Here is the updated configuration file with the two optional fields `enabled` and `overwrite`. These fields can be used to control whether specific instructions should be executed and whether the files should be overwritten if they already exist.
+
+### config.yml
+
+```yaml
+instructions:
+  - content: "Please analyze the provided code and give a summary."
+    output_file: "summary.md"
+    enabled: true
+    overwrite: true
+  - content: "Identify potential improvements in the code."
+    output_file: "improvements.md"
+    enabled: true
+    overwrite: true
+  - content: "Highlight any security vulnerabilities."
+    output_file: "security_vulnerabilities.md"
+    enabled: true
+    overwrite: true
+pre:
+  - role: system
+    content: "You are a helpful assistant."
+  - role: user
+    content: "This is the initial context message."
+post:
+  - role: user
+    content: "This is the final context message after the files."
+relevant_file_types:
+  python: ['.py', '.md']
+  dotnet: ['.cs', '.md', '.json', 'Dockerfile']
+exclude_dirs:
+  python: ['venv', '__pycache__']
+  dotnet: ['bin', 'obj']
+app_description_file: "path_to_your_app_description_file"
+```
+
+### main.py (Updated Functions)
+
+Now, let's update the `prompt_chatgpt` and `save_responses` functions in `main.py` to handle the `enabled` and `overwrite` fields:
+
+```python
 import os
 import yaml
 from openai import OpenAI
@@ -31,7 +71,6 @@ def load_language_config(config_file, project_type):
 
 # Load configurations
 config = load_config(CONFIG_FILE)
-#languages_config_file = config.get('languages_config_file')
 language_config = load_language_config('config.lang.yml', PROJECT_TYPE)
 
 # Set relevant file types, exclude directories, and other settings
@@ -43,8 +82,6 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
-
-
 
 # Function to create file tree
 def create_file_tree(root_dir):
@@ -78,7 +115,8 @@ def prompt_chatgpt(file_tree, app_description, config, language_config):
     pre_messages = language_config.get('pre_messages', []) +  config['pre'] 
     post_messages = config['post']
     messages = []
-    #add pre messages to messages
+
+    # Add pre-messages to messages
     messages.extend(pre_messages)
 
     for filename, contents in file_tree.items():
@@ -94,17 +132,26 @@ def prompt_chatgpt(file_tree, app_description, config, language_config):
         "content": f"App Description: {app_description}"
     })
 
-
     for instruction in instructions:
+        if not instruction.get('enabled', True):
+            continue
+        
+        output_file = instruction['output_file']
+        if not instruction.get('overwrite', True) and os.path.exists(os.path.join(OUTPUT_DIR, output_file)):
+            print(f"Skipping {output_file} as overwrite is set to False and the file already exists.")
+            continue
+
         messages.append({
             "role": "user",
             "content": instruction['content']
         })
+
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=messages
         )
-        responses[instruction['output_file']] = response.choices[0].message.content.strip()
+        responses[output_file] = response.choices[0].message.content.strip()
+    
     return responses
 
 # Function to save responses in markdown files
@@ -146,3 +193,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+In this updated `main.py`, the `prompt_chatgpt` function now checks for the `enabled` and `overwrite` fields for each instruction, and skips the instruction if `enabled` is set to `False` or if `overwrite` is `False` and the file already exists. This adds flexibility to your instruction processing.

@@ -21,18 +21,26 @@ languages:
   dotnet:
     pre_messages:
       - role: system
-        content: "You are an expert in .NET programming."
+        content: >
+          You are ChatGPT, an advanced AI language model trained by OpenAI, specialized in assisting expert C# cloud developers. 
+          Your role is to provide detailed, accurate, and efficient support for complex technical queries, best practices, 
+          and advanced concepts in C# and cloud development. Your responses should be concise, professional, 
+          and incorporate the latest industry standards and technologies. Focus on providing practical solutions, code snippets, 
+          and clear explanations to help the user overcome any development challenges they encounter. 
+          Always prioritize clarity, precision, and relevance in your answers.
       - role: user
         content: "Please provide insights for a .NET project."
     relevant_file_types:
       - '.cs'
       - '.md'
+      - '.sql'
       - '.json'
       - 'Dockerfile'
     exclude_dirs:
       - 'bin'
       - 'obj'
       - '.vs'
+      - 'Migrations'
 
   java:
     pre_messages:
