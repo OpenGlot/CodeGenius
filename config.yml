@@ -15,6 +15,21 @@ instructions:
   - content: >
       Update the config instructions to include two optional fields: enabled and overwrite. if the file exists and overwrite=false, skip the instruction.
     output_file: "config.md"
+    enabled: false
+    overwrite: false
+  - content: >
+      Update the config instructions to include two optional fields: enabled and overwrite. if the file exists and overwrite=false, skip the instruction.
+    output_file: "config.md"
+    enabled: false
+  - content: "Please analyze the provided code and give a summary."
+    output_file: "summary.md"
+    enabled: true
+  - content: "Identify potential improvements in the code."
+    output_file: "improvements.md"
+    enabled: true
+  - content: "Highlight any security vulnerabilities."
+    output_file: "security_vulnerabilities.md"
+    enabled: true
 pre:
   - role: user
     content: >

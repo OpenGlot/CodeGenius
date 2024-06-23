@@ -31,7 +31,6 @@ def load_language_config(config_file, project_type):
 
 # Load configurations
 config = load_config(CONFIG_FILE)
-#languages_config_file = config.get('languages_config_file')
 language_config = load_language_config('config.lang.yml', PROJECT_TYPE)
 
 # Set relevant file types, exclude directories, and other settings
@@ -43,8 +42,6 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
-
-
 
 # Function to create file tree
 def create_file_tree(root_dir):
@@ -78,7 +75,8 @@ def prompt_chatgpt(file_tree, app_description, config, language_config):
     pre_messages = language_config.get('pre_messages', []) +  config['pre'] 
     post_messages = config['post']
     messages = []
-    #add pre messages to messages
+
+    # Add pre-messages to messages
     messages.extend(pre_messages)
 
     for filename, contents in file_tree.items():
@@ -94,17 +92,31 @@ def prompt_chatgpt(file_tree, app_description, config, language_config):
         "content": f"App Description: {app_description}"
     })
 
-
     for instruction in instructions:
+        if not instruction.get('enabled', True):
+            continue
+        
+        output_file = instruction['output_file']
+
+        overwrite = instruction.get('overwrite', False)
+        exists = os.path.exists(os.path.join(OUTPUT_DIR, output_file))
+        if not overwrite and exists:
+            print(f"Skipping {output_file} as overwrite is set to False and the file already exists.")
+            continue
+
         messages.append({
             "role": "user",
             "content": instruction['content']
         })
+
+        print(f"Prompting: {instruction['content']}.")
+
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=messages
         )
-        responses[instruction['output_file']] = response.choices[0].message.content.strip()
+        responses[output_file] = response.choices[0].message.content.strip()
+    
     return responses
 
 # Function to save responses in markdown files
